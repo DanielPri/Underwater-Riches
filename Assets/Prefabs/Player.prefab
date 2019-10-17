@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69cc1afd8703004eb41efcba47c71fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buoyantForce: 1
+  buoyantForce: 125
   horizontalSpeed: 3
+  moveTimeDelay: 0.25
+  waterGravity: 0.5
 --- !u!1 &4424701033392806620
 GameObject:
   m_ObjectHideFlags: 0

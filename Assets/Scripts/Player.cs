@@ -5,18 +5,26 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
+    [Header("Movement")]
     [SerializeField] float buoyantForce = 1f;
     [SerializeField] float horizontalSpeed = 1f;
     [SerializeField] float moveTimeDelay = 0.5f;
 
+    [Header("Physics")]
+    [SerializeField] float waterGravity = 0.5f;
+    [SerializeField] float waterImpact = 0.5f;
+
+    Rigidbody2D rb;
     bool canMove = true;
+    bool carrying = false;
     float lastTimeMoved = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
         lastTimeMoved = Time.time;
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = waterGravity;
     }
 
     // Update is called once per frame
@@ -32,7 +40,7 @@ public class Player : MonoBehaviour
         if (Time.time - lastTimeMoved > moveTimeDelay) { 
             if (canMove && (Input.GetButtonDown("Jump") || Input.GetButtonDown("Fire1")))
             {
-                GetComponent<Rigidbody2D>().AddForce(Vector2.up * buoyantForce);
+                rb.AddForce(Vector2.up * buoyantForce, ForceMode2D.Force);
                 lastTimeMoved = Time.time;
             }
         }
@@ -40,24 +48,33 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        HandleBoundaries(collider);
         HandleGold(collider);
+        HandleBoundaries(collider);
     }
 
     private void HandleGold(Collider2D collider)
     {
-        if (collider.tag == "Gold")
+        if (collider.tag == "Gold" && !carrying)
+        {
+            collider.transform.parent = transform;
+            collider.enabled = false;
+            carrying = true;
+        }
+        if (collider.tag == "Ship" && carrying)
         {
             Debug.Log("EEEEEEEEEEEEEY MACARAEENENA");
-            collider.transform.parent = transform;
+            DestroyComponentInChildWithTag("Gold");
+            carrying = false;
         }
     }
-
+    
     private void HandleBoundaries(Collider2D collider)
     {
         if (collider.tag == "Sky")
         {
+            Debug.Log("Player in the sky");
             canMove = false;
+            rb.gravityScale = 1f;
         }
         if (collider.tag == "Left")
         {
@@ -76,8 +93,20 @@ public class Player : MonoBehaviour
         if (collider.tag == "Sky")
         {
             canMove = true;
+            rb.gravityScale = waterGravity;
+            rb.AddForce(Vector2.up * -rb.velocity.y * waterImpact, ForceMode2D.Impulse);
+            Debug.Log(rb.velocity);
         }
-        
+    }
 
+    private void DestroyComponentInChildWithTag(string input)
+    {
+        foreach (Transform child in transform)
+        {
+            if(child.tag == input)
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
