@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69cc1afd8703004eb41efcba47c71fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalSpeed: 3
+  buoyantForce: 1
   horizontalSpeed: 3
 --- !u!1 &4424701033392806620
 GameObject:
@@ -114,7 +114,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: ed84ebba66fda7e4aa049050b9831853, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
