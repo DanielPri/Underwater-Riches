@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
         Transform[] spawnLocations = goldSpawns.GetComponentsInChildren<Transform>();
         foreach(Transform location in spawnLocations)
         {
-            Debug.Log("spawning gold at: " + location.position.x + "," + location.position.y);
+            //Debug.Log("spawning gold at: " + location.position.x + "," + location.position.y);
             Object.Instantiate(goldBar, location.position, Quaternion.identity);
         }
     }

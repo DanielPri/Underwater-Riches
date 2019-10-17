@@ -44,12 +44,34 @@ public class Player : MonoBehaviour
                 lastTimeMoved = Time.time;
             }
         }
+        transform.rotation = Quaternion.identity;
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
         HandleGold(collider);
         HandleBoundaries(collider);
+        HandleEnemy(collider);
+    }
+
+    private void HandleEnemy(Collider2D collider)
+    {
+        if (collider.tag == "Enemy")
+        {
+            if(GetChildWithTag("AirTank") != null)
+            {
+                Destroy(GetChildWithTag("AirTank"));
+            }
+            else
+            {
+                HandleDeath();
+            }
+        }
+    }
+
+    private void HandleDeath()
+    {
+        Destroy(GetChildWithTag("Player"));
     }
 
     private void HandleGold(Collider2D collider)
@@ -62,8 +84,8 @@ public class Player : MonoBehaviour
         }
         if (collider.tag == "Ship" && carrying)
         {
-            Debug.Log("EEEEEEEEEEEEEY MACARAEENENA");
-            DestroyComponentInChildWithTag("Gold");
+            //Debug.Log("EEEEEEEEEEEEEY MACARAEENENA");
+            Destroy(GetChildWithTag("Gold"));
             carrying = false;
         }
     }
@@ -72,18 +94,18 @@ public class Player : MonoBehaviour
     {
         if (collider.tag == "Sky")
         {
-            Debug.Log("Player in the sky");
+            //Debug.Log("Player in the sky");
             canMove = false;
             rb.gravityScale = 1f;
         }
         if (collider.tag == "Left")
         {
-            Debug.Log("Player is in left");
+            //Debug.Log("Player is in left");
             transform.position = new Vector3(8.5f, transform.position.y, 0);
         }
         if (collider.tag == "Right")
         {
-            Debug.Log("Player is in right");
+            //Debug.Log("Player is in right");
             transform.position = new Vector3(-9.2f, transform.position.y, 0);
         }
     }
@@ -95,18 +117,19 @@ public class Player : MonoBehaviour
             canMove = true;
             rb.gravityScale = waterGravity;
             rb.AddForce(Vector2.up * -rb.velocity.y * waterImpact, ForceMode2D.Impulse);
-            Debug.Log(rb.velocity);
+            //Debug.Log(rb.velocity);
         }
     }
 
-    private void DestroyComponentInChildWithTag(string input)
+    private GameObject GetChildWithTag(string input)
     {
         foreach (Transform child in transform)
         {
             if(child.tag == input)
             {
-                Destroy(child.gameObject);
+                return child.gameObject;
             }
         }
+        return null;
     }
 }
