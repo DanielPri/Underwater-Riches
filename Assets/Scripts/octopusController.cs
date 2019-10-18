@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class sharkController : MonoBehaviour
+public class octopusController : MonoBehaviour
 {
 
     [SerializeField] float movementSpeed = 1f;
-    [SerializeField] float warpOffset = 0.5f;
     [SerializeField] float speedVariationMultiplier = 1f;
     Transform LeftBound;
     Transform RightBound;
+    SpriteRenderer spriteRenderer;
     enum Direction {Left, Right};
     Direction moveDirection = Direction.Right;
 
@@ -31,7 +31,8 @@ public class sharkController : MonoBehaviour
             moveDirection = Direction.Left;
             movementSpeed *= -1;
 
-            GetComponentInChildren<SpriteRenderer>().flipX = false;
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            spriteRenderer.flipX = false;
         }
     }
 
@@ -47,14 +48,14 @@ public class sharkController : MonoBehaviour
         //Handle Left Warp
         if(transform.position.x < LeftBound.position.x && moveDirection == Direction.Left)
         {
-            transform.position = new Vector2(RightBound.position.x + warpOffset, transform.position.y);
-            
+            movementSpeed *= -1;
+            spriteRenderer.flipX = true;
         }
         //Handle Right Warp
         if (transform.position.x > RightBound.position.x && moveDirection == Direction.Right)
         {
-            transform.position = new Vector2(LeftBound.position.x - warpOffset, transform.position.y);
-
+            movementSpeed *= -1;
+            spriteRenderer.flipX = false;
         }
     }
 }

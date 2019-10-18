@@ -58,18 +58,26 @@ public class Player : MonoBehaviour
     {
         if (collider.tag == "Enemy")
         {
+            //if there are remaining air tanks, lose one
             if(GetChildWithTag("AirTank") != null)
             {
                 Destroy(GetChildWithTag("AirTank"));
-            }
-            else
-            {
-                HandleDeath();
+                StartCoroutine(waitAndDie());
             }
         }
     }
 
-    private void HandleDeath()
+    private IEnumerator waitAndDie()
+    {
+        //wait half a second for air tank to be destroyed before checking if it is destroyed
+        yield return new WaitForSeconds(0.1f);
+        if (GetChildWithTag("AirTank") == null)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+        private void HandleDeath()
     {
         Destroy(GetChildWithTag("Player"));
     }
