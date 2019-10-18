@@ -15,11 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] float enemySpawnFrequency = 5f;
     [SerializeField] float minimumEnemyDuration = 5f;
     float elapsedLevelDuration;
+    float nearlyElapsedLevelDuration;
     float elapsedGoldSpawnDuration;
     float elapsedEnemySpawnDuration;
     int maxSharkQty = 1;
     int currentSharkQty = 0;
     int currentGoldQty = 0;
+    int maxOctopusQty = 1;
+    int currentOctopusQty = 0;
 
     [Header("Gold")]
     [SerializeField] GameObject goldSpawns;
@@ -39,11 +42,13 @@ public class GameManager : MonoBehaviour
     int score = 0;
     TextMeshProUGUI levelText;
     int currentLevel = 1;
+    public Action<int> sharkSpeedHandler;
 
     // Start is called before the first frame update
     void Start()
     {
         elapsedLevelDuration = levelDuration;
+        nearlyElapsedLevelDuration = levelDuration - 5f;
         golds =  new GameObject[] {goldBar, goldBarMedium, goldLarge};
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         levelText = GameObject.FindGameObjectWithTag("Level").GetComponent<TextMeshProUGUI>();
@@ -66,24 +71,38 @@ public class GameManager : MonoBehaviour
             elapsedLevelDuration += levelDuration;
             currentLevel++;
             DisplayLevel();
-            maxSharkQty = currentLevel;
+            maxSharkQty = currentLevel + 4;
+        }
+        //this will always happen 5 seconds before the next level
+        if (nearlyElapsedLevelDuration <= Time.time)
+        {
+            nearlyElapsedLevelDuration += levelDuration;
+            sharkSpeedHandler?.Invoke(currentLevel);
         }
     }
-
+    
     private void HandleEnemies()
     {
         //sharks
         Transform[] enemySpawnLocations = enemySpawns.GetComponentsInChildren<Transform>();
-
-        //check amount of sharks
-        if (elapsedEnemySpawnDuration <= Time.time && currentSharkQty < maxSharkQty)
+        
+        if (elapsedEnemySpawnDuration <= Time.time)
         {
-            GameObject.Instantiate(shark, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
-            currentSharkQty++;
+            if (currentSharkQty < maxSharkQty)
+            {
+                GameObject newShark = GameObject.Instantiate(shark, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
+                sharkController newSharkController = newShark.GetComponent<sharkController>();
+                newSharkController.deathHandler += SharkDecrement;
+                newSharkController.movementSpeed = 1 - (1f / currentLevel);
+                currentSharkQty++;                
+            }
+            else if(currentOctopusQty < maxOctopusQty)
+            {
+                GameObject.Instantiate(octopus, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
+                currentOctopusQty++;
+            }
             elapsedEnemySpawnDuration += enemySpawnFrequency;
         }
-
-        //octopus
     }
 
     private void InitGold()
@@ -98,7 +117,8 @@ public class GameManager : MonoBehaviour
         if (elapsedGoldSpawnDuration <= Time.time && currentGoldQty < goldSpawnLocations.Length)
         {
             elapsedGoldSpawnDuration += goldSpawnFrequency;
-            UnityEngine.Object.Instantiate(golds[UnityEngine.Random.Range(0, golds.Length)], goldSpawnLocations[UnityEngine.Random.Range(0, goldSpawnLocations.Length)].position, Quaternion.identity);
+            GameObject newgold = UnityEngine.Object.Instantiate(golds[UnityEngine.Random.Range(0, golds.Length)], goldSpawnLocations[UnityEngine.Random.Range(0, goldSpawnLocations.Length)].position, Quaternion.identity);
+            newgold.GetComponent<goldController>().despawnHandler += GoldDecrement;
             currentGoldQty++;
         }
     }
@@ -130,5 +150,14 @@ public class GameManager : MonoBehaviour
             array[r] = array[i];
             array[i] = t;
         }
+    }
+
+    void SharkDecrement()
+    {
+        currentSharkQty--;
+    }
+    void GoldDecrement()
+    {
+        currentGoldQty--;
     }
 }

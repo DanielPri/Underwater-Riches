@@ -90,6 +90,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6231181205121116}
   - component: {fileID: 7925134097271023223}
+  - component: {fileID: -2027023059136662346}
   m_Layer: 0
   m_Name: Gold Large
   m_TagString: Gold
@@ -128,3 +129,16 @@ CapsuleCollider2D:
   m_Offset: {x: 0.053212643, y: -0.047511697}
   m_Size: {x: 0.5407244, y: 0.7692292}
   m_Direction: 0
+--- !u!114 &-2027023059136662346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6231181205121114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36e54b62508846841bb3b2fcd1855b1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifespan: 15

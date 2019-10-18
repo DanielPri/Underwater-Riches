@@ -8,15 +8,19 @@ public class octopusController : MonoBehaviour
 
     [SerializeField] float movementSpeed = 1f;
     [SerializeField] float speedVariationMultiplier = 1f;
+    [SerializeField] float maxScaleFactor = 2f;
     Transform LeftBound;
     Transform RightBound;
     [SerializeField] SpriteRenderer spriteRenderer;
     enum Direction {Left, Right};
     Direction moveDirection = Direction.Right;
+    [SerializeField] float lifespan = 50f;
+    float spawnTime;
 
     // Start is called before the first frame update
     void Start()
     {
+        spawnTime = Time.time;
         LeftBound = GameObject.FindGameObjectWithTag("Left").transform;
         RightBound = GameObject.FindGameObjectWithTag("Right").transform;
         //octopus... octopi... octopuses? have slightly different speed
@@ -34,7 +38,7 @@ public class octopusController : MonoBehaviour
             }
             spriteRenderer.flipX = false;
         }
-        Debug.Log(moveDirection);
+        transform.localScale = transform.localScale * UnityEngine.Random.Range(0.5f, 1f) * maxScaleFactor;
     }
 
     // Update is called once per frame
@@ -52,6 +56,7 @@ public class octopusController : MonoBehaviour
             movementSpeed *= -1;
             spriteRenderer.flipX = true;
             moveDirection = Direction.Right;
+            Despawn();
         }
         //Handle Right Warp
         if (transform.position.x > RightBound.position.x && moveDirection == Direction.Right)
@@ -59,6 +64,15 @@ public class octopusController : MonoBehaviour
             movementSpeed *= -1;
             spriteRenderer.flipX = false;
             moveDirection = Direction.Left;
+            Despawn();
+        }
+    }
+
+    private void Despawn()
+    {
+        if (lifespan <= Time.time - spawnTime)
+        {
+            Destroy(gameObject);
         }
     }
 }

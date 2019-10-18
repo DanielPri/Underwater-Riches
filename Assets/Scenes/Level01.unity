@@ -2195,7 +2195,7 @@ GameObject:
   - component: {fileID: 493808264}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2226,10 +2226,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f0af839e5fc6e4dbcd716db39fa9b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDuration: 15
+  levelDuration: 3
   goldSpawnFrequency: 5
-  enemySpawnFrequency: 5
-  minimumEnemyDuration: 5
+  enemySpawnFrequency: 2
+  minimumEnemyDuration: 20
   goldSpawns: {fileID: 1439805432}
   goldBar: {fileID: 6231181205121114, guid: 2a975c90de263f64fbc7845205a6d6be, type: 3}
   goldBarMedium: {fileID: 6231181205121114, guid: 0399fa5f66000f74cbc2da3d9628c0fc,
