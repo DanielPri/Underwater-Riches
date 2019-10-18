@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 252504423}
   m_Layer: 5
   m_Name: Level
-  m_TagString: Untagged
+  m_TagString: Level
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2208,7 +2208,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493808262}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4005467, y: -0.12677805, z: -3.7246094}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2226,8 +2226,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f0af839e5fc6e4dbcd716db39fa9b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelDuration: 15
+  goldSpawnFrequency: 5
+  enemySpawnFrequency: 5
+  minimumEnemyDuration: 5
   goldSpawns: {fileID: 1439805432}
   goldBar: {fileID: 6231181205121114, guid: 2a975c90de263f64fbc7845205a6d6be, type: 3}
+  goldBarMedium: {fileID: 6231181205121114, guid: 0399fa5f66000f74cbc2da3d9628c0fc,
+    type: 3}
+  goldLarge: {fileID: 6231181205121114, guid: 2540ed963a87d9d43a0228bbe18b2720, type: 3}
   enemySpawns: {fileID: 178909751}
   shark: {fileID: 1465598049210661710, guid: 78310a5ad6eadda48bbb1eab792b12d0, type: 3}
   octopus: {fileID: 1465598049210661710, guid: 9ae533b9d0459d94c81c310799e0266b, type: 3}
@@ -2678,11 +2685,6 @@ PrefabInstance:
     - target: {fileID: 4424701033322914032, guid: 596cc59819f206f41b0a1688c136cd88,
         type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 4424701033322914032, guid: 596cc59819f206f41b0a1688c136cd88,
-        type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4424701033322914033, guid: 596cc59819f206f41b0a1688c136cd88,

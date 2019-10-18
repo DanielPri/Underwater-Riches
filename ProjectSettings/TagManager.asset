@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - AirTank
   - Score
+  - Level
   layers:
   - Default
   - TransparentFX

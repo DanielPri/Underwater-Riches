@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6231181123509439}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.033, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6231181205121116}
@@ -69,8 +69,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 3147485791622524449, guid: 607a76e99a608d84eba66e3fc7ec3cc6,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2cd77237f0763094ca9c3f08fc748e56, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,7 +91,7 @@ GameObject:
   - component: {fileID: 6231181205121116}
   - component: {fileID: 6231181205121115}
   m_Layer: 0
-  m_Name: Gold Bar
+  m_Name: Gold Large
   m_TagString: Gold
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 6231181205121114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 6231181123509408}
   m_Father: {fileID: 0}

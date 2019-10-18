@@ -10,7 +10,7 @@ public class octopusController : MonoBehaviour
     [SerializeField] float speedVariationMultiplier = 1f;
     Transform LeftBound;
     Transform RightBound;
-    SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer spriteRenderer;
     enum Direction {Left, Right};
     Direction moveDirection = Direction.Right;
 
@@ -28,7 +28,10 @@ public class octopusController : MonoBehaviour
             moveDirection = Direction.Left;
             movementSpeed *= -1;
 
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (spriteRenderer == null)
+            { 
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            }
             spriteRenderer.flipX = false;
         }
         Debug.Log(moveDirection);

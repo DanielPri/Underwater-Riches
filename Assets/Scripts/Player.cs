@@ -18,9 +18,12 @@ public class Player : MonoBehaviour
     bool canMove = true;
     bool carrying = false;
     float lastTimeMoved = 0f;
+    GameObject gold;
 
-    public Action scoreHandler;
+    //Callback for communication with gameManager
+    public Action<int> scoreHandler;
 
+    // -----------------------------------------------------------------------------------------------------------
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +37,7 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
     }
-
+    
     private void MovePlayer()
     {
         float horizontalDisplacement = Input.GetAxis("Horizontal") * horizontalSpeed * Time.deltaTime;
@@ -92,12 +95,37 @@ public class Player : MonoBehaviour
             collider.transform.parent = transform;
             collider.enabled = false;
             carrying = true;
+            gold = GetChildWithTag("Gold");
+            Debug.Log(gold.name);
+            if (gold.name.Contains("Gold Bar Medium"))
+            {
+                rb.mass += 2;
+            }
+            else if (gold.name.Contains("Gold Large"))
+            {
+                rb.mass += 2.5f;
+            }
+            else
+            {
+                rb.mass += 1;
+            }
         }
         if (collider.tag == "Ship" && carrying)
         {
-            //Debug.Log("EEEEEEEEEEEEEY MACARAEENENA");
-            Destroy(GetChildWithTag("Gold"));
-            scoreHandler?.Invoke();
+            if(gold.name.Contains("Gold Bar Medium"))
+            {
+                scoreHandler(2);
+            }
+            else if (gold.name.Contains("Gold Large"))
+            {
+                scoreHandler(10);
+            }
+            else
+            {
+                scoreHandler(1);
+            }
+            Destroy(gold);
+            rb.mass = 1;
             carrying = false;
         }
     }

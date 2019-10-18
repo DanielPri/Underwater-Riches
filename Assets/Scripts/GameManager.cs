@@ -7,24 +7,55 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+
+
+    [Header("Game settings")]
+    [SerializeField] float levelDuration = 15f;
+    [SerializeField] float goldSpawnFrequency = 5f;
+    [SerializeField] float enemySpawnFrequency = 5f;
+    [SerializeField] float minimumEnemyDuration = 5f;
+
+    [Header("Gold")]
     [SerializeField] GameObject goldSpawns;
     [SerializeField] GameObject goldBar;
+    [SerializeField] GameObject goldBarMedium;
+    [SerializeField] GameObject goldLarge;
+    GameObject[] golds;
 
+    [Header("Characters")]
     [SerializeField] GameObject enemySpawns;
     [SerializeField] GameObject shark;
     [SerializeField] GameObject octopus;
     [SerializeField] GameObject player;
+    
     TextMeshProUGUI scoreText;
     int score = 0;
+    TextMeshProUGUI levelText;
     int currentLevel = 1;
 
     // Start is called before the first frame update
     void Start()
     {
+        golds =  new GameObject[] {goldBar, goldBarMedium, goldLarge};
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
-        HandleGold();
-        HandleEnemies();
+        levelText = GameObject.FindGameObjectWithTag("Level").GetComponent<TextMeshProUGUI>();
         player.GetComponent<Player>().scoreHandler += DisplayScore;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        HandleLevel();
+    }
+
+    private void HandleLevel()
+    {
+        if(levelDuration <= Time.time)
+        {
+            levelDuration += levelDuration;
+            currentLevel++;
+            DisplayLevel();
+        }
     }
 
     private void HandleEnemies()
@@ -44,22 +75,42 @@ public class GameManager : MonoBehaviour
     private void HandleGold()
     {
         Transform[] goldSpawnLocations = goldSpawns.GetComponentsInChildren<Transform>();
-        foreach (Transform location in goldSpawnLocations)
+        ShuffleArray(goldSpawnLocations);
+
+        int qtyOfGold = Mathf.Clamp(currentLevel, 0, goldSpawnLocations.Length);
+        Debug.Log("Amount of gold to spawn: " + qtyOfGold);
+        for (int i = 0; i < qtyOfGold; i++)
         {
-            //Debug.Log("spawning gold at: " + location.position.x + "," + location.position.y);
-            UnityEngine.Object.Instantiate(goldBar, location.position, Quaternion.identity);
+            Debug.Log("spawning gold at: " + goldSpawnLocations[i]);
+            UnityEngine.Object.Instantiate(golds[UnityEngine.Random.Range(0, golds.Length)], goldSpawnLocations[i]);
         }
     }
 
-    void DisplayScore()
+    void DisplayScore(int value)
     {
-        score++;
+        score += value;
         scoreText.text = "Score: " + score;
     }
 
-    // Update is called once per frame
-    void Update()
+    void DisplayLevel()
     {
-       
+        levelText.text = "Level " + currentLevel; 
+    }
+
+   
+
+    void ShuffleArray<T>(T[] array)
+    {
+        int n = array.Length;
+        for (int i = 0; i < n; i++)
+        {
+            // Pick a new index higher than current for each item in the array
+            int r = i + UnityEngine.Random.Range(0, n - i);
+
+            // Swap item into new spot
+            T t = array[r];
+            array[r] = array[i];
+            array[i] = t;
+        }
     }
 }
