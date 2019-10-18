@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     bool carrying = false;
     float lastTimeMoved = 0f;
 
+    public Action scoreHandler;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +64,7 @@ public class Player : MonoBehaviour
             if(GetChildWithTag("AirTank") != null)
             {
                 Destroy(GetChildWithTag("AirTank"));
+                //check if you die too, but after a delay since Destroy takes few milliseconds
                 StartCoroutine(waitAndDie());
             }
         }
@@ -94,6 +97,7 @@ public class Player : MonoBehaviour
         {
             //Debug.Log("EEEEEEEEEEEEEY MACARAEENENA");
             Destroy(GetChildWithTag("Gold"));
+            scoreHandler?.Invoke();
             carrying = false;
         }
     }
