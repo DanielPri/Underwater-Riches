@@ -14,17 +14,14 @@ public class octopusController : MonoBehaviour
     enum Direction {Left, Right};
     Direction moveDirection = Direction.Right;
 
-    void Awake() {
-         LeftBound = GameObject.FindGameObjectWithTag("Left").transform;
-         RightBound = GameObject.FindGameObjectWithTag("Right").transform;
-    }   
-
     // Start is called before the first frame update
     void Start()
     {
-        //sharks have slightly different speed
+        LeftBound = GameObject.FindGameObjectWithTag("Left").transform;
+        RightBound = GameObject.FindGameObjectWithTag("Right").transform;
+        //octopus... octopi... octopuses? have slightly different speed
         movementSpeed += UnityEngine.Random.value * speedVariationMultiplier;
-        //Some random sharks go right
+        //Some random octys go right
         //the rest go left
         if (UnityEngine.Random.value > 0.5f)
         {
@@ -34,6 +31,7 @@ public class octopusController : MonoBehaviour
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             spriteRenderer.flipX = false;
         }
+        Debug.Log(moveDirection);
     }
 
     // Update is called once per frame
@@ -50,12 +48,14 @@ public class octopusController : MonoBehaviour
         {
             movementSpeed *= -1;
             spriteRenderer.flipX = true;
+            moveDirection = Direction.Right;
         }
         //Handle Right Warp
         if (transform.position.x > RightBound.position.x && moveDirection == Direction.Right)
         {
             movementSpeed *= -1;
             spriteRenderer.flipX = false;
+            moveDirection = Direction.Left;
         }
     }
 }

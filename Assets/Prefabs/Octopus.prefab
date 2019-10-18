@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760730253628389826}
   - component: {fileID: 6400240807519075356}
+  - component: {fileID: 6400240807519075357}
   m_Layer: 0
   m_Name: Octopus
   m_TagString: Enemy
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1465598049210661710}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.9884, y: 2.9884, z: 2.9884}
+  m_LocalScale: {x: 1.5355, y: 1.5355, z: 1.5355}
   m_Children:
   - {fileID: 388498842926613348}
   m_Father: {fileID: 0}
@@ -42,12 +43,26 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0028805456, y: 0}
+  m_Offset: {x: 0.0055880467, y: 0.039520033}
   serializedVersion: 2
-  m_Radius: 0.15952626
+  m_Radius: 0.35798863
+--- !u!114 &6400240807519075357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465598049210661710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71695924c42a4fa43b84db239a579f91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 1
+  speedVariationMultiplier: 1
 --- !u!1 &7094501900533322344
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +74,7 @@ GameObject:
   - component: {fileID: 388498842926613348}
   - component: {fileID: 8009262905351966131}
   m_Layer: 0
-  m_Name: shark
+  m_Name: octopus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +89,7 @@ Transform:
   m_GameObject: {fileID: 7094501900533322344}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.8014172, y: 1.8014172, z: 1.8014172}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1760730253628389826}
   m_RootOrder: 0
@@ -117,9 +132,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 9d7101d2914354543a70310be584dd14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
