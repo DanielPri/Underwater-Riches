@@ -14,6 +14,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] float goldSpawnFrequency = 5f;
     [SerializeField] float enemySpawnFrequency = 5f;
     [SerializeField] float minimumEnemyDuration = 5f;
+    float elapsedLevelDuration;
+    float elapsedGoldSpawnDuration;
+    float elapsedEnemySpawnDuration;
+    int maxSharkQty = 1;
+    int currentSharkQty = 0;
+    int currentGoldQty = 0;
 
     [Header("Gold")]
     [SerializeField] GameObject goldSpawns;
@@ -21,6 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject goldBarMedium;
     [SerializeField] GameObject goldLarge;
     GameObject[] golds;
+    Transform[] goldSpawnLocations;
 
     [Header("Characters")]
     [SerializeField] GameObject enemySpawns;
@@ -36,25 +43,30 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        elapsedLevelDuration = levelDuration;
         golds =  new GameObject[] {goldBar, goldBarMedium, goldLarge};
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         levelText = GameObject.FindGameObjectWithTag("Level").GetComponent<TextMeshProUGUI>();
         player.GetComponent<Player>().scoreHandler += DisplayScore;
+        InitGold();
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleLevel();
+        HandleGold();
+        HandleEnemies();
     }
 
     private void HandleLevel()
     {
-        if(levelDuration <= Time.time)
+        if (elapsedLevelDuration <= Time.time)
         {
-            levelDuration += levelDuration;
+            elapsedLevelDuration += levelDuration;
             currentLevel++;
             DisplayLevel();
+            maxSharkQty = currentLevel;
         }
     }
 
@@ -62,32 +74,38 @@ public class GameManager : MonoBehaviour
     {
         //sharks
         Transform[] enemySpawnLocations = enemySpawns.GetComponentsInChildren<Transform>();
-        int amountOfSharks = 1 + currentLevel;
-        for(int i = 0; i < amountOfSharks; i++)
+
+        //check amount of sharks
+        if (elapsedEnemySpawnDuration <= Time.time && currentSharkQty < maxSharkQty)
         {
-            UnityEngine.Object.Instantiate(shark, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)]);
+            GameObject.Instantiate(shark, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
+            currentSharkQty++;
+            elapsedEnemySpawnDuration += enemySpawnFrequency;
         }
 
         //octopus
-        UnityEngine.Object.Instantiate(octopus, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)]);
+    }
+
+    private void InitGold()
+    {
+        goldSpawnLocations = goldSpawns.GetComponentsInChildren<Transform>();
+        ShuffleArray(goldSpawnLocations);
+        elapsedGoldSpawnDuration = 0;
     }
 
     private void HandleGold()
     {
-        Transform[] goldSpawnLocations = goldSpawns.GetComponentsInChildren<Transform>();
-        ShuffleArray(goldSpawnLocations);
-
-        int qtyOfGold = Mathf.Clamp(currentLevel, 0, goldSpawnLocations.Length);
-        Debug.Log("Amount of gold to spawn: " + qtyOfGold);
-        for (int i = 0; i < qtyOfGold; i++)
+        if (elapsedGoldSpawnDuration <= Time.time && currentGoldQty < goldSpawnLocations.Length)
         {
-            Debug.Log("spawning gold at: " + goldSpawnLocations[i]);
-            UnityEngine.Object.Instantiate(golds[UnityEngine.Random.Range(0, golds.Length)], goldSpawnLocations[i]);
+            elapsedGoldSpawnDuration += goldSpawnFrequency;
+            UnityEngine.Object.Instantiate(golds[UnityEngine.Random.Range(0, golds.Length)], goldSpawnLocations[UnityEngine.Random.Range(0, goldSpawnLocations.Length)].position, Quaternion.identity);
+            currentGoldQty++;
         }
     }
 
     void DisplayScore(int value)
     {
+        currentGoldQty--;
         score += value;
         scoreText.text = "Score: " + score;
     }

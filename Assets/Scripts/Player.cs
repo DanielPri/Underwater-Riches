@@ -99,11 +99,11 @@ public class Player : MonoBehaviour
             Debug.Log(gold.name);
             if (gold.name.Contains("Gold Bar Medium"))
             {
-                rb.mass += 2;
+                rb.mass += 1.5f;
             }
             else if (gold.name.Contains("Gold Large"))
             {
-                rb.mass += 2.5f;
+                rb.mass += 2f;
             }
             else
             {
