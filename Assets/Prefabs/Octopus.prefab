@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1760730253628389826}
   - component: {fileID: 6400240807519075356}
   - component: {fileID: 6400240807519075357}
+  - component: {fileID: 8112302491738935838}
   m_Layer: 0
   m_Name: Octopus
   m_TagString: Enemy
@@ -66,6 +67,25 @@ MonoBehaviour:
   maxScaleFactor: 2
   spriteRenderer: {fileID: 8009262905351966131}
   lifespan: 15
+--- !u!95 &8112302491738935838
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465598049210661710}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 77bc5fc07c5a4d8459263494cb3d4a19, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7094501900533322344
 GameObject:
   m_ObjectHideFlags: 0

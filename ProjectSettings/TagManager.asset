@@ -16,6 +16,7 @@ TagManager:
   - Lives
   - Boost
   - Canvas
+  - Particles
   layers:
   - Default
   - TransparentFX

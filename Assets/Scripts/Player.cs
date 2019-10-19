@@ -173,21 +173,24 @@ public class Player : MonoBehaviour
     
     private void HandleBoundaries(Collider2D collider)
     {
-        if (collider.tag == "Sky")
+        if (rb != null)
         {
-            //Debug.Log("Player in the sky");
-            canMove = false;
-            rb.gravityScale = 1f;
-        }
-        if (collider.tag == "Left")
-        {
-            //Debug.Log("Player is in left");
-            transform.position = new Vector3(8.5f, transform.position.y, 0);
-        }
-        if (collider.tag == "Right")
-        {
-            //Debug.Log("Player is in right");
-            transform.position = new Vector3(-9.2f, transform.position.y, 0);
+            if (collider.tag == "Sky")
+            {
+                //Debug.Log("Player in the sky");
+                canMove = false;
+                rb.gravityScale = 1f;
+            }
+            if (collider.tag == "Left")
+            {
+                //Debug.Log("Player is in left");
+                transform.position = new Vector3(8.5f, transform.position.y, 0);
+            }
+            if (collider.tag == "Right")
+            {
+                //Debug.Log("Player is in right");
+                transform.position = new Vector3(-9.2f, transform.position.y, 0);
+            }
         }
     }
 
