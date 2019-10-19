@@ -9,16 +9,24 @@ public class Player : MonoBehaviour
     [SerializeField] float buoyantForce = 1f;
     [SerializeField] float horizontalSpeed = 1f;
     [SerializeField] float moveTimeDelay = 0.5f;
+    [SerializeField] float boostDuration = 3f;
+    [SerializeField] float boostAmount = 2f;
 
     [Header("Physics")]
     [SerializeField] float waterGravity = 0.5f;
     [SerializeField] float waterImpact = 0.5f;
+    [SerializeField] GameObject bubbleParticles;
+    [SerializeField] GameObject explosionParticles;
 
     Rigidbody2D rb;
     bool canMove = true;
     bool carrying = false;
     float lastTimeMoved = 0f;
+    bool canBoost = false;
+    float boost = 1;
+    float boostTimeElapsed = 0f;
     GameObject gold;
+
 
     //Callback for communication with gameManager
     public Action<int> scoreHandler;
@@ -41,16 +49,38 @@ public class Player : MonoBehaviour
     
     private void MovePlayer()
     {
-        float horizontalDisplacement = Input.GetAxis("Horizontal") * horizontalSpeed * Time.deltaTime;
+        if (canBoost && Input.GetButton("Fire3"))
+        {
+            boostTimeElapsed += Time.deltaTime;
+            boost = boostAmount;
+            if (boostTimeElapsed > boostDuration)
+            {
+                canBoost = false;
+                boostTimeElapsed = 0;
+            }
+        }
+        else {
+            boost = 1;
+        }
+        float horizontalDisplacement = Input.GetAxis("Horizontal") * horizontalSpeed * Time.deltaTime * boost;
         transform.Translate(horizontalDisplacement, 0, 0);
         if (Time.time - lastTimeMoved > moveTimeDelay) { 
             if (canMove && (Input.GetButtonDown("Jump") || Input.GetButtonDown("Fire1")))
             {
-                rb.AddForce(Vector2.up * buoyantForce, ForceMode2D.Force);
+                rb.AddForce(Vector2.up * buoyantForce * boost, ForceMode2D.Force);
                 lastTimeMoved = Time.time;
+                var bubbles = Instantiate(bubbleParticles, transform.position + new Vector3(0, 0, -2), Quaternion.identity);
+                StartCoroutine(killParticles(bubbles));
+                bubbles.GetComponent<ParticleSystem>().Play();
             }
         }
         transform.rotation = Quaternion.identity;
+    }
+
+    private IEnumerator killParticles(GameObject bubbles)
+    {
+        yield return new WaitForSeconds(3.5f);
+        Destroy(bubbles);
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -58,6 +88,17 @@ public class Player : MonoBehaviour
         HandleGold(collider);
         HandleBoundaries(collider);
         HandleEnemy(collider);
+        HandleBoost(collider);
+    }
+
+    private void HandleBoost(Collider2D collider)
+    {
+        if (collider.tag == "Boost")
+        {
+            canBoost = true;
+            boostTimeElapsed = 0;
+            Destroy(collider.gameObject);
+        }
     }
 
     private void HandleEnemy(Collider2D collider)
@@ -82,6 +123,9 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
             playerDeath();
+            var explosion = Instantiate(explosionParticles, transform.position + new Vector3(0, 0, -4), Quaternion.identity);
+            StartCoroutine(killParticles(explosion));
+            yield return new WaitForSeconds(3.5f);
         }
     }
     
@@ -93,7 +137,7 @@ public class Player : MonoBehaviour
             collider.enabled = false;
             carrying = true;
             gold = GetChildWithTag("Gold");
-            Debug.Log(gold.name);
+            
             if (gold.name.Contains("Gold Bar Medium"))
             {
                 rb.mass += 1.5f;

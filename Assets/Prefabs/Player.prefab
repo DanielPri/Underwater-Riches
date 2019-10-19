@@ -51,8 +51,14 @@ MonoBehaviour:
   buoyantForce: 75
   horizontalSpeed: 3
   moveTimeDelay: 0.15
+  boostDuration: 3
+  boostAmount: 3
   waterGravity: 0.2
   waterImpact: 0.5
+  bubbleParticles: {fileID: 4125144928481509712, guid: f14880fe2cafeae45bed782b97f64a87,
+    type: 3}
+  explosionParticles: {fileID: 4125144928481509712, guid: 7609e4f42bd7af34a882b48ae220850b,
+    type: 3}
 --- !u!50 &5169363678024015764
 Rigidbody2D:
   serializedVersion: 4

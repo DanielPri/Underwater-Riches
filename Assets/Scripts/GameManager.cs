@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject goldBar;
     [SerializeField] GameObject goldBarMedium;
     [SerializeField] GameObject goldLarge;
+    [SerializeField] GameObject boost;
     GameObject[] golds;
     Transform[] goldSpawnLocations;
 
@@ -48,6 +49,8 @@ public class GameManager : MonoBehaviour
     int currentLevel = 1;
     public Action<float> enemySpeedHandler;
     GameObject currentLife;
+    GameObject canvas;
+    GameObject restartButton;
 
     // Start is called before the first frame update
     void Start()
@@ -56,10 +59,20 @@ public class GameManager : MonoBehaviour
         currentLife = Instantiate(player, GameObject.FindGameObjectWithTag("Ship").transform.position, Quaternion.identity);
         elapsedLevelDuration = levelDuration;
         nearlyElapsedLevelDuration = levelDuration - 5f;
-        golds =  new GameObject[] {goldBar, goldBarMedium, goldLarge};
+        if (StaticData.gameModeNormal)
+        {
+            golds = new GameObject[] { goldBar, goldBarMedium, goldLarge };
+        }
+        else
+        {
+            golds = new GameObject[] { goldBar, goldBarMedium, goldLarge, boost };
+        }
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         levelText = GameObject.FindGameObjectWithTag("Level").GetComponent<TextMeshProUGUI>();
         livesText = GameObject.FindGameObjectWithTag("Lives").GetComponent<TextMeshProUGUI>();
+        canvas = GameObject.FindGameObjectWithTag("Canvas");
+
+        Debug.Log(canvas);
 
         currentLife.GetComponent<Player>().scoreHandler += DisplayScore;
         currentLife.GetComponent<Player>().playerDeath += HandleDeath;
@@ -79,7 +92,40 @@ public class GameManager : MonoBehaviour
         else
         {
             levelText.text = "Game Over.";
+            restartButton = canvas.transform.GetChild(3).gameObject;
+            restartButton.SetActive(true);
         }
+    }
+
+    public void Restart()
+    {
+        restartButton.SetActive(false);
+        currentLevel = 1;
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject enemy in allEnemies) {Destroy(enemy);}
+
+        GameObject[] golds = GameObject.FindGameObjectsWithTag("Gold");
+        foreach (GameObject gold in golds) { Destroy(gold); }
+
+        GameObject[] boosts = GameObject.FindGameObjectsWithTag("Boost");
+        foreach (GameObject boost in boosts) { Destroy(boost); }
+
+        GameObject[] particles = GameObject.FindGameObjectsWithTag("Particles");
+        foreach (GameObject particle in particles) { Destroy(particle); }
+
+        currentLife = Instantiate(player, GameObject.FindGameObjectWithTag("Ship").transform.position, Quaternion.identity);
+        currentLife.GetComponent<Player>().scoreHandler += DisplayScore;
+        currentLife.GetComponent<Player>().playerDeath += HandleDeath;
+
+        elapsedLevelDuration = levelDuration + Time.time;
+        nearlyElapsedLevelDuration = elapsedLevelDuration - 5f;
+        extralives = 2;
+        scoreText.text = "Score: 0";
+        levelText.text = "Level 1";
+        livesText.text = "Extra Lives remaining: 2";
+        currentGoldQty = 0;
+        currentOctopusQty = 0;
+        currentSharkQty = 0;
     }
 
     // Update is called once per frame
