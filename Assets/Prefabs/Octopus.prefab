@@ -63,7 +63,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 1
   speedVariationMultiplier: 1
+  maxScaleFactor: 2
   spriteRenderer: {fileID: 8009262905351966131}
+  lifespan: 15
 --- !u!1 &7094501900533322344
 GameObject:
   m_ObjectHideFlags: 0

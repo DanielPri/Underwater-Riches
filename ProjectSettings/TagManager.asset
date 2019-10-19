@@ -13,6 +13,7 @@ TagManager:
   - AirTank
   - Score
   - Level
+  - Lives
   layers:
   - Default
   - TransparentFX

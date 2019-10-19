@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 
     //Callback for communication with gameManager
     public Action<int> scoreHandler;
+    public Action playerDeath;
 
     // -----------------------------------------------------------------------------------------------------------
     // Start is called before the first frame update
@@ -80,14 +81,10 @@ public class Player : MonoBehaviour
         if (GetChildWithTag("AirTank") == null)
         {
             Destroy(gameObject);
+            playerDeath();
         }
     }
-
-        private void HandleDeath()
-    {
-        Destroy(GetChildWithTag("Player"));
-    }
-
+    
     private void HandleGold(Collider2D collider)
     {
         if (collider.tag == "Gold" && !carrying)

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float goldSpawnFrequency = 5f;
     [SerializeField] float enemySpawnFrequency = 5f;
     [SerializeField] float minimumEnemyDuration = 5f;
+    [SerializeField] float enemySpeedIncreasePerLevel = 1f;
     float elapsedLevelDuration;
     float nearlyElapsedLevelDuration;
     float elapsedGoldSpawnDuration;
@@ -21,8 +22,10 @@ public class GameManager : MonoBehaviour
     int maxSharkQty = 1;
     int currentSharkQty = 0;
     int currentGoldQty = 0;
-    int maxOctopusQty = 1;
+    int maxOctopusQty = 2;
     int currentOctopusQty = 0;
+    float speedIncrease = 0;
+    int extralives = 2;
 
     [Header("Gold")]
     [SerializeField] GameObject goldSpawns;
@@ -41,19 +44,42 @@ public class GameManager : MonoBehaviour
     TextMeshProUGUI scoreText;
     int score = 0;
     TextMeshProUGUI levelText;
+    TextMeshProUGUI livesText;
     int currentLevel = 1;
-    public Action<int> sharkSpeedHandler;
+    public Action<float> enemySpeedHandler;
+    GameObject currentLife;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        currentLife = Instantiate(player, GameObject.FindGameObjectWithTag("Ship").transform.position, Quaternion.identity);
         elapsedLevelDuration = levelDuration;
         nearlyElapsedLevelDuration = levelDuration - 5f;
         golds =  new GameObject[] {goldBar, goldBarMedium, goldLarge};
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         levelText = GameObject.FindGameObjectWithTag("Level").GetComponent<TextMeshProUGUI>();
-        player.GetComponent<Player>().scoreHandler += DisplayScore;
+        livesText = GameObject.FindGameObjectWithTag("Lives").GetComponent<TextMeshProUGUI>();
+
+        currentLife.GetComponent<Player>().scoreHandler += DisplayScore;
+        currentLife.GetComponent<Player>().playerDeath += HandleDeath;
         InitGold();
+    }
+
+    private void HandleDeath()
+    {
+        if(extralives > 0)
+        {
+            extralives--;
+            livesText.text = "Extra Lives remaining: " + extralives;
+            currentLife = Instantiate(player, GameObject.FindGameObjectWithTag("Ship").transform.position, Quaternion.identity);
+            currentLife.GetComponent<Player>().scoreHandler += DisplayScore;
+            currentLife.GetComponent<Player>().playerDeath += HandleDeath;
+        }
+        else
+        {
+            levelText.text = "Game Over.";
+        }
     }
 
     // Update is called once per frame
@@ -72,12 +98,13 @@ public class GameManager : MonoBehaviour
             currentLevel++;
             DisplayLevel();
             maxSharkQty = currentLevel + 4;
+            speedIncrease = enemySpeedIncreasePerLevel - (enemySpeedIncreasePerLevel / currentLevel);
         }
         //this will always happen 5 seconds before the next level
         if (nearlyElapsedLevelDuration <= Time.time)
         {
             nearlyElapsedLevelDuration += levelDuration;
-            sharkSpeedHandler?.Invoke(currentLevel);
+            enemySpeedHandler?.Invoke(speedIncrease);
         }
     }
     
@@ -88,17 +115,22 @@ public class GameManager : MonoBehaviour
         
         if (elapsedEnemySpawnDuration <= Time.time)
         {
+            //shark logic
             if (currentSharkQty < maxSharkQty)
             {
                 GameObject newShark = GameObject.Instantiate(shark, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
                 sharkController newSharkController = newShark.GetComponent<sharkController>();
                 newSharkController.deathHandler += SharkDecrement;
-                newSharkController.movementSpeed = 1 - (1f / currentLevel);
+                newSharkController.movementSpeed += speedIncrease;
                 currentSharkQty++;                
             }
+            //octopus
             else if(currentOctopusQty < maxOctopusQty)
             {
-                GameObject.Instantiate(octopus, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
+                GameObject newOctopus = GameObject.Instantiate(octopus, enemySpawnLocations[UnityEngine.Random.Range(0, enemySpawnLocations.Length)].position, Quaternion.identity);
+                octopusController newOctopusController = newOctopus.GetComponent<octopusController>();
+                newOctopusController.deathHandler += OctopusDecrement;
+                newOctopusController.movementSpeed += speedIncrease;
                 currentOctopusQty++;
             }
             elapsedEnemySpawnDuration += enemySpawnFrequency;
@@ -155,6 +187,10 @@ public class GameManager : MonoBehaviour
     void SharkDecrement()
     {
         currentSharkQty--;
+    }
+    void OctopusDecrement()
+    {
+        currentOctopusQty--;
     }
     void GoldDecrement()
     {

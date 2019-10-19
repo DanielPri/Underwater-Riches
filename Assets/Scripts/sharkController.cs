@@ -39,18 +39,18 @@ public class sharkController : MonoBehaviour
             GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
         transform.localScale = transform.localScale * UnityEngine.Random.Range(0.5f,1f) * maxScaleFactor;
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().sharkSpeedHandler += movementSpeedIncrease;
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().enemySpeedHandler += movementSpeedIncrease;
     }
 
-    private void movementSpeedIncrease(int currentLevel)
+    private void movementSpeedIncrease(float speedIncrease)
     {
         if(movementSpeed >= 0)
         {
-            movementSpeed += 1 - (1f / currentLevel);
+            movementSpeed += speedIncrease;
         }
         else
         {
-            movementSpeed -= 1 - (1f / currentLevel);
+            movementSpeed -= speedIncrease;
         }
     }
 

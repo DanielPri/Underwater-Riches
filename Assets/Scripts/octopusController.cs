@@ -6,7 +6,7 @@ using UnityEngine;
 public class octopusController : MonoBehaviour
 {
 
-    [SerializeField] float movementSpeed = 1f;
+    [SerializeField] public float movementSpeed = 1f;
     [SerializeField] float speedVariationMultiplier = 1f;
     [SerializeField] float maxScaleFactor = 2f;
     Transform LeftBound;
@@ -16,6 +16,7 @@ public class octopusController : MonoBehaviour
     Direction moveDirection = Direction.Right;
     [SerializeField] float lifespan = 50f;
     float spawnTime;
+    public Action deathHandler;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,7 @@ public class octopusController : MonoBehaviour
             spriteRenderer.flipX = false;
         }
         transform.localScale = transform.localScale * UnityEngine.Random.Range(0.5f, 1f) * maxScaleFactor;
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().enemySpeedHandler += movementSpeedIncrease;
     }
 
     // Update is called once per frame
@@ -73,6 +75,19 @@ public class octopusController : MonoBehaviour
         if (lifespan <= Time.time - spawnTime)
         {
             Destroy(gameObject);
+            deathHandler();
+        }
+    }
+
+    private void movementSpeedIncrease(float speedIncrease)
+    {
+        if (movementSpeed >= 0)
+        {
+            movementSpeed += speedIncrease;
+        }
+        else
+        {
+            movementSpeed -= speedIncrease;
         }
     }
 }
